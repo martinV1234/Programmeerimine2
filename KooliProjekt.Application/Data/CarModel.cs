@@ -10,14 +10,16 @@ namespace KooliProjekt.Application.Data
     {
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
 
         [Required]
         public int CarManufacturerId { get; set; }
-        [MaxLength(20)]
-        public int KmRate { get; set; }
-        [MaxLength(40)]
-        public int HourlyRate { get; set; }
+        [Range(typeof(decimal), "0", "1000000")]
+        public decimal KmRate { get; set; }
+        [Range(typeof(decimal), "0", "1000000")]
+        public decimal HourlyRate { get; set; }
 
         public Car Car { get; set; }
     }

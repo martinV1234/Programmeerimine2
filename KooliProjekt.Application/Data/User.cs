@@ -19,8 +19,12 @@ namespace KooliProjekt.Application.Data
         [StringLength(255)]
         public string PasswordHash { get; set; }
 
-        public int PhoneNumber { get; set; }
+        [Phone]
+        [StringLength(20)]
+        public string PhoneNumber { get; set; }
         [Required]
+        [EmailAddress]
+        [StringLength(254)]
         public string Email { get; set; }
 
         public bool IsAdmin { get; set; }

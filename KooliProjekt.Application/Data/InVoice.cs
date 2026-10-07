@@ -10,8 +10,10 @@ namespace KooliProjekt.Application.Data
     {
         public int Id { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime InvoiceDate { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
         [Required]

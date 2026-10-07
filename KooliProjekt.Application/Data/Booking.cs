@@ -14,14 +14,17 @@ namespace KooliProjekt.Application.Data
 
         public DateTime Finished { get; set; }
 
-        public int StartKm { get; set; }
+        [Range(typeof(decimal), "0", "10000000")]
+        public decimal StartKm { get; set; }
 
-        public int FinishKm { get; set; }
+        [Range(typeof(decimal), "0", "10000000")]
+        public decimal FinishKm { get; set; }
 
-        [MaxLength(20)]
-        public int KmRate { get; set; }
+        [Range(typeof(decimal), "0", "1000000")]
+        public decimal KmRate { get; set; }
 
-        public int HourlyRate { get; set; }
+        [Range(typeof(decimal), "0", "1000000")]
+        public decimal HourlyRate { get; set; }
 
         [Required]
         public int CarId { get; set; }
