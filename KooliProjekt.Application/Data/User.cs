@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,19 +16,5 @@ namespace KooliProjekt.Application.Data
         [Required]
         [StringLength(255)]
         public string PasswordHash { get; set; }
-
-        [Phone]
-        [StringLength(20)]
-        public string PhoneNumber { get; set; }
-        [Required]
-        [EmailAddress]
-        [StringLength(254)]
-        public string Email { get; set; }
-
-        public bool IsAdmin { get; set; }
-
-        public InVoice InVoice { get; set; }
-
-        public Booking Booking { get; set; }
     }
 }

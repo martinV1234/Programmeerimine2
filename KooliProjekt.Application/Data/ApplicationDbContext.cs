@@ -14,17 +14,7 @@ namespace KooliProjekt.Application.Data
         }
 
         public DbSet<User> Users { get; set; }
-
-        public DbSet<InVoice> Invoices { get; set; }
-
-        public DbSet<InvoiceLine> InvoiceLines { get; set; }
-
-        public DbSet<Booking> Bookings { get; set; }
-
-        public DbSet<CarManufacturer> CarManufacturers { get; set; }
-
-        public DbSet<CarModel> CarModels { get; set; }
-
-        public DbSet<Car> Cars { get; set; }
+        public DbSet<TodoList> TodoLists { get; set; }
+        public DbSet<TodoItem> TodoItems { get; set; }
     }
 }
