@@ -1,6 +1,6 @@
+using System.Threading;
 using System.Threading.Tasks;
-using KooliProjekt.Application.Features.Users.Queries.Get;
-using KooliProjekt.Application.Features.Users.Queries.List;
+using KooliProjekt.Application.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,28 +15,38 @@ namespace KooliProjekt.WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int? id)
+        [HttpGet("get/{id?}")]
+        public async Task<IActionResult> Get(int? id, CancellationToken cancellationToken = default)
         {
-            if (!id.HasValue || id.Value < 1)
+            if (!id.HasValue || id.Value <= 0)
             {
                 return NotFound();
             }
 
-            var user = await _mediator.Send(new GetUserQuery(id.Value));
-            if (user == null)
+            var query = new GetUserQuery { Id = id.Value };
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return Ok(user);
+            return Json(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> List()
+        [HttpGet("list")]
+        public async Task<IActionResult> List(CancellationToken cancellationToken = default)
         {
-            var users = await _mediator.Send(new ListUsersQuery());
-            return Ok(users);
+            var query = new ListUsersQuery();
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Json(result);
         }
     }
 }
+

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace KooliProjekt.Application.Data
 {
@@ -10,25 +10,25 @@ namespace KooliProjekt.Application.Data
     {
         public int Id { get; set; }
 
+        public string LineItem { get; set; } = string.Empty;
         [Required]
-        [StringLength(100)]
-        public string LineItem { get; set; }
-
-        [Required]
-        [Range(typeof(decimal), "0", "10000000")]
+        [Range(0, 100000)]
+        [Precision(10, 2)]
         public decimal Price { get; set; }
-
         [Required]
-        [StringLength(10)]
-        public string Unit { get; set; }
+        [StringLength(20)]
+        public string Unit { get; set; } = string.Empty;
         [Required]
-        [Range(1, 1000000)]
-        public int Quantity { get; set; }
+        [Range(0.01, 100000)]
+        [Precision(10, 2)]
+        public decimal Quantity { get; set; }
         [Required]
-        [Range(typeof(decimal), "0", "10000000")]
+        [Range(0, 1000000)]
+        [Precision(12, 2)]
         public decimal Total { get; set; }
-        [Required]
-        [Range(1, int.MaxValue)]
+
         public int BookingId { get; set; }
+
+        public Booking Booking { get; set; } = null!;
     }
 }

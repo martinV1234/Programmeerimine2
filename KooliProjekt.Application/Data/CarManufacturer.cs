@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace KooliProjekt.Application.Data
 {
     public class CarManufacturer
     {
         public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        [Required]
-        public string Name { get; set; }
-
-        public CarModel CarModel { get; set; }
+        public ICollection<CarModel> CarModels { get; set; } = new List<CarModel>();
     }
 }

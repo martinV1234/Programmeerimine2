@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace KooliProjekt.Application.Data
 {
     public class Car
     {
+        [Required]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(20)]
-        public int RegistrationNo { get; set; }
+        public string RegistrationNo { get; set; } = string.Empty;
 
         public int CarModelId { get; set; }
 
-        public Booking Booking { get; set; }
+        public CarModel CarModel { get; set; } = null!;
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

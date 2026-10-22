@@ -1,154 +1,162 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace KooliProjekt.Application.Data
 {
     public static class SeedData
     {
-
-        public static void Generate(ApplicationDbContext context)
+        public static async Task InitializeAsync(
+            ApplicationDbContext context)
         {
-            if (context.Users.Any())
+            // Kui algandmed on juba lisatud, ära lisa neid uuesti.
+            if (await context.Users.AnyAsync())
             {
                 return;
             }
 
-            SeedUsers(context);
-            SeedTodoLists(context);
-            SeedTodoItems(context);
-        }
+            // Ensure LINQ is available for Select overloads
 
-        private static void SeedUsers(ApplicationDbContext context)
-        {
-            // Generate realistic-looking user names
-            var firstNames = new[] { "Marta", "Karl", "Liis", "Juhan", "Mari", "Peeter", "Kristi", "Andres", "Maarja", "Tõnis", "Katrin", "Siim", "Anu", "Rasmus", "Evelin", "Sven", "Kaire", "Priit", "Helen", "Marko", "Triin", "Erik", "Airi", "Rain", "Pille", "Viktor", "Kertu", "Indrek", "Grete", "Taavi", "Liina", "Ott", "Maris", "Jaan", "Heli", "Rainer" };
-            var lastNames = new[] { "Tamm", "Kask", "Saar", "Põder", "Mägi", "Vaher", "Rebane", "Põllu", "Lepp", "Koppel", "Karu", "Sipelgas", "Oja", "Kivirand", "Paas", "Ruut", "Siim", "Nurm", "Aun", "Karu", "Jõe", "Lai", "Künnap", "Laur", "Kangur", "Lill", "Eensaar", "Sild", "Peetson", "Kivi", "Uibo", "Kaljurand", "Erikson", "Rannap", "Vanem" };
-
-            var users = new List<User>();
-            var usedUsernames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var rand = new Random(42);
-
-            // Create at least 35 users
-            for (int i = 0; i < 35; i++)
+            // 1. AUTOTOOTJAD – 35
+            string[] manufacturers =
             {
-                var first = firstNames[rand.Next(firstNames.Length)];
-                var last = lastNames[rand.Next(lastNames.Length)];
-                var baseName = (first + "." + last).ToLower();
-                var username = baseName;
-                var suffix = 1;
-                while (usedUsernames.Contains(username))
-                {
-                    username = baseName + suffix;
-                    suffix++;
-                }
-                usedUsernames.Add(username);
-
-                var password = "Password!" + (1000 + i);
-                var passwordHash = ComputeSha256Hash(password);
-
-                users.Add(new User { UserName = username, PasswordHash = passwordHash });
-            }
-
-            context.Users.AddRange(users);
-            context.SaveChanges();
-        }
-
-        private static void SeedTodoLists(ApplicationDbContext context)
-        {
-            var titlesStart = new[] { "School", "Home", "Work", "Shopping", "Personal", "Project", "Reading", "Travel", "Fitness", "Chores" };
-            var titlesEnd = new[] { "Tasks", "ToDo", "Checklist", "Plans", "Ideas", "Notes", "Goals", "Errands", "Backlog", "Inbox" };
-
-            var users = context.Users.OrderBy(u => u.Id).ToList();
-            var todoLists = new List<TodoList>();
-
-            // Ensure at least 35 todo lists, assign them to users round-robin
-            var rand = new Random(123);
-            for (int i = 0; i < 35; i++)
-            {
-                var title = titlesStart[rand.Next(titlesStart.Length)] + " " + titlesEnd[rand.Next(titlesEnd.Length)];
-                var user = users[i % users.Count];
-                todoLists.Add(new TodoList { Title = title + " - " + user.UserName, UserId = user.Id });
-            }
-
-            context.TodoLists.AddRange(todoLists);
-            context.SaveChanges();
-        }
-
-        private static void SeedTodoItems(ApplicationDbContext context)
-        {
-            var lists = context.TodoLists.OrderBy(l => l.Id).ToList();
-            var items = new List<TodoItem>();
-            var rand = new Random(999);
-
-            var sampleTasks = new[]
-            {
-                "Finish math homework",
-                "Prepare presentation slides",
-                "Buy groceries: milk, bread, eggs",
-                "Call the dentist to book appointment",
-                "Read chapter 5 of history book",
-                "Clean the kitchen",
-                "Pay electricity bill",
-                "Send project update email",
-                "Schedule team meeting",
-                "Practice guitar 30 minutes",
-                "Write blog post about C#",
-                "Review pull requests",
-                "Plan weekend trip",
-                "Organize documents",
-                "Water the plants",
-                "Backup laptop files",
-                "Update CV",
-                "Buy birthday gift",
-                "Walk the dog",
-                "Finish unit tests for feature"
+                "Toyota", "Volkswagen", "BMW", "Mercedes-Benz",
+                "Audi", "Volvo", "Škoda", "Ford", "Honda", "Nissan",
+                "Hyundai", "Kia", "Mazda", "Subaru", "Lexus",
+                "Peugeot", "Renault", "Citroën", "Opel", "Fiat",
+                "Tesla", "Porsche", "Land Rover", "Jaguar", "Jeep",
+                "Mitsubishi", "Suzuki", "Dacia", "Seat", "Cupra",
+                "Mini", "Alfa Romeo", "Chevrolet", "Saab", "BYD"
             };
 
-            // Create multiple items per list so every list looks realistic
-            foreach (var list in lists)
-            {
-                // create 3-6 items per list
-                int count = rand.Next(3, 7);
-                for (int i = 0; i < count; i++)
-                {
-                    var title = sampleTasks[rand.Next(sampleTasks.Length)];
-                    // make titles slightly unique
-                    var titleUnique = title + (rand.NextDouble() < 0.25 ? " (important)" : "") + (rand.NextDouble() < 0.15 ? " - ASAP" : "");
-                    var isCompleted = rand.NextDouble() < 0.35;
-                    items.Add(new TodoItem { Title = titleUnique, IsCompleted = isCompleted, TodoListId = list.Id });
-                }
-            }
+            var manufacturerEntities = manufacturers
+                .Select(name => new CarManufacturer { Name = name })
+                .ToList(); 
 
-            // Ensure at least 35 todo items in total (in case lists were fewer)
-            if (items.Count < 35)
-            {
-                var needed = 35 - items.Count;
-                var firstListId = lists.First().Id;
-                for (int i = 0; i < needed; i++)
-                {
-                    items.Add(new TodoItem { Title = "Extra task " + (i + 1), IsCompleted = false, TodoListId = firstListId });
-                }
-            }
+            context.CarManufacturers.AddRange(manufacturerEntities);
+            await context.SaveChangesAsync();
 
-            context.TodoItems.AddRange(items);
-            context.SaveChanges();
-        }
-
-        private static string ComputeSha256Hash(string rawData)
-        {
-            using (var sha256 = SHA256.Create())
+            // 2. AUTOMUDELID – 35
+            string[] models =
             {
-                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-                var sb = new StringBuilder();
-                foreach (var b in bytes)
+                "Corolla", "Golf", "3 Series", "C-Class", "A4",
+                "XC60", "Octavia", "Focus", "Civic", "Qashqai",
+                "Tucson", "Sportage", "CX-5", "Forester", "NX",
+                "308", "Clio", "C4", "Astra", "500",
+                "Model 3", "Macan", "Discovery Sport", "F-Pace",
+                "Compass", "Outlander", "Vitara", "Duster",
+                "Leon", "Formentor", "Cooper", "Giulia",
+                "Trax", "9-3", "Atto 3"
+            };
+
+            var modelEntities = models
+                .Select((name, i) => new CarModel
                 {
-                    sb.Append(b.ToString("x2"));
-                }
-                return sb.ToString();
-            }
+                    Name = name,
+                    CarManufacturerId = manufacturerEntities[i].Id,
+                    KmRate = 0.20m + (i % 5) * 0.05m,
+                    HourlyRate = 5m + (i % 6) * 2m
+                })
+                .ToList();
+
+            context.CarModels.AddRange(modelEntities);
+            await context.SaveChangesAsync();
+
+            // 3. AUTOD – 35
+            var carEntities = Enumerable.Range(0, 35)
+                .Select(i => new Car
+                {
+                    RegistrationNo = $"ABC-{100 + i}",
+                    CarModelId = modelEntities[i].Id
+                })
+                .ToList();
+
+            context.Cars.AddRange(carEntities);
+            await context.SaveChangesAsync();
+
+            // 4. KASUTAJAD – 35
+            var userEntities = Enumerable.Range(0, 35)
+                .Select(i => new User
+                {
+                    Name = $"Klient {i + 1:00}",
+                    Phone = $"+372555{i:00000}",
+                    Email = $"klient{i + 1:00}@example.com",
+                    IsAdmin = i == 0,
+                    Password = "DemoPassword123!"
+                })
+                .ToList();
+
+            context.Users.AddRange(userEntities);
+            await context.SaveChangesAsync();
+
+            // 5. BRONEERINGUD – 35
+            var startDate = new DateTime(2026, 1, 1);
+
+            var bookingEntities = Enumerable.Range(0, 35)
+                .Select(i =>
+                {
+                    decimal startKm = 12000m + i * 850m;
+                    decimal kmRate = 0.20m + (i % 5) * 0.05m;
+                    decimal hourlyRate = 5m + (i % 6) * 2m;
+
+                    return new Booking
+                    {
+                        Started = startDate.AddDays(i),
+                        Finished = startDate.AddDays(i).AddHours(4),
+                        StartKm = startKm,
+                        FinishKm = startKm + 120m + i,
+                        KmRate = kmRate,
+                        HourlyRate = hourlyRate,
+                        CarId = carEntities[i].Id,
+                        UserId = userEntities[i].Id
+                    };
+                })
+                .ToList();
+
+            context.Bookings.AddRange(bookingEntities);
+            await context.SaveChangesAsync();
+
+            // 6. ARVED – 35
+            var invoiceEntities = Enumerable.Range(0, 35)
+                .Select(i =>
+                {
+                    var invoiceDate = startDate.AddDays(i + 1);
+                    return new Invoice
+                    {
+                        InvoiceDate = invoiceDate,
+                        DueDate = invoiceDate.AddDays(14),
+                        UserId = userEntities[i].Id,
+                        IsPaid = i % 2 == 0
+                    };
+                })
+                .ToList();
+
+            context.Invoices.AddRange(invoiceEntities);
+            await context.SaveChangesAsync();
+
+            // 7. ARVEREAD – 35
+            var invoiceLineEntities = Enumerable.Range(0, 35)
+                .Select(i =>
+                {
+                    decimal distance = 120m + i;
+                    decimal kmRate = 0.20m + (i % 5) * 0.05m;
+                    decimal price = Math.Round(distance * kmRate, 2);
+
+                    return new InvoiceLine
+                    {
+                        LineItem = "Autorendi läbisõit",
+                        Price = price,
+                        Unit = "km",
+                        Quantity = 1m,
+                        Total = price,
+                        BookingId = bookingEntities[i].Id
+                    };
+                })
+                .ToList();
+
+            context.InvoiceLines.AddRange(invoiceLineEntities);
+            await context.SaveChangesAsync();
         }
     }
 }

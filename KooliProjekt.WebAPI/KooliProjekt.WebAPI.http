@@ -1,6 +1,169 @@
 @KooliProjekt.WebAPI_HostAddress = http://localhost:5086
 
-GET {{KooliProjekt.WebAPI_HostAddress}}/weatherforecast/
+### Users List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/list
 Accept: application/json
 
-###
+### Users Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/get/1
+Accept: application/json
+
+### Users Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/get/2147483647
+Accept: application/json
+
+### Users Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/get/0
+Accept: application/json
+
+### Users Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/get/-1
+Accept: application/json
+
+### Users Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/get
+Accept: application/json
+
+### Cars List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/list
+Accept: application/json
+
+### Cars Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/get/1
+Accept: application/json
+
+### Cars Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/get/2147483647
+Accept: application/json
+
+### Cars Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/get/0
+Accept: application/json
+
+### Cars Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/get/-1
+Accept: application/json
+
+### Cars Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Cars/get
+Accept: application/json
+
+### Bookings List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/list
+Accept: application/json
+
+### Bookings Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/get/1
+Accept: application/json
+
+### Bookings Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/get/2147483647
+Accept: application/json
+
+### Bookings Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/get/0
+Accept: application/json
+
+### Bookings Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/get/-1
+Accept: application/json
+
+### Bookings Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/get
+Accept: application/json
+
+### Invoices List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/list
+Accept: application/json
+
+### Invoices Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/get/1
+Accept: application/json
+
+### Invoices Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/get/2147483647
+Accept: application/json
+
+### Invoices Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/get/0
+Accept: application/json
+
+### Invoices Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/get/-1
+Accept: application/json
+
+### Invoices Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Invoices/get
+Accept: application/json
+
+### InvoiceLines List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/list
+Accept: application/json
+
+### InvoiceLines Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/get/1
+Accept: application/json
+
+### InvoiceLines Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/get/2147483647
+Accept: application/json
+
+### InvoiceLines Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/get/0
+Accept: application/json
+
+### InvoiceLines Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/get/-1
+Accept: application/json
+
+### InvoiceLines Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/InvoiceLines/get
+Accept: application/json
+
+### CarModels List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/list
+Accept: application/json
+
+### CarModels Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/get/1
+Accept: application/json
+
+### CarModels Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/get/2147483647
+Accept: application/json
+
+### CarModels Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/get/0
+Accept: application/json
+
+### CarModels Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/get/-1
+Accept: application/json
+
+### CarModels Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarModels/get
+Accept: application/json
+
+### CarManufacturers List: 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/list
+Accept: application/json
+
+### CarManufacturers Get: 200 (olemasolev ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/get/1
+Accept: application/json
+
+### CarManufacturers Get: 404 (olematu ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/get/2147483647
+Accept: application/json
+
+### CarManufacturers Get: 404 (nulliga võrdne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/get/0
+Accept: application/json
+
+### CarManufacturers Get: 404 (negatiivne ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/get/-1
+Accept: application/json
+
+### CarManufacturers Get: 404 (puuduv ID)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/CarManufacturers/get
+Accept: application/json

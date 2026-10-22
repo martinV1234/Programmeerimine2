@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using FluentValidation;
 using KooliProjekt.Application.Behaviors;
 using KooliProjekt.Application.Data;
@@ -7,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace KooliProjekt.WebAPI
 {
@@ -29,7 +29,7 @@ namespace KooliProjekt.WebAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+          
             var applicationAssembly = typeof(ErrorHandlingBehavior<,>).Assembly;
             builder.Services.AddValidatorsFromAssembly(applicationAssembly);
             builder.Services.AddMediatR(config =>
@@ -55,17 +55,16 @@ namespace KooliProjekt.WebAPI
             app.MapControllers();
 
             using (var scope = app.Services.CreateScope())
-            using (var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
-                await dbContext.Database.MigrateAsync();
-                if (app.Environment.IsDevelopment())
-                {
-                    SeedData.Generate(dbContext);
-                }
+                var context = scope.ServiceProvider
+                    .GetRequiredService<ApplicationDbContext>();
+
+                // Do not auto-migrate this existing database at startup: its Users
+                // table is not recorded in EF's migration history.
+                await SeedData.InitializeAsync(context);
             }
 
-
-            await app.RunAsync();
+            app.Run();
         }
     }
 }
