@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FluentValidation;
 using KooliProjekt.Application.Behaviors;
 using KooliProjekt.Application.Data;
@@ -11,7 +12,7 @@ namespace KooliProjekt.WebAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +57,7 @@ namespace KooliProjekt.WebAPI
             using (var scope = app.Services.CreateScope())
             using (var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
-                dbContext.Database.Migrate();
+                await dbContext.Database.MigrateAsync();
                 if (app.Environment.IsDevelopment())
                 {
                     SeedData.Generate(dbContext);
@@ -64,7 +65,7 @@ namespace KooliProjekt.WebAPI
             }
 
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
