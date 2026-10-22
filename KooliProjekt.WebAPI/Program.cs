@@ -59,7 +59,7 @@ namespace KooliProjekt.WebAPI
                 var context = scope.ServiceProvider
                     .GetRequiredService<ApplicationDbContext>();
 
-                await context.Database.MigrateAsync();
+                //await context.Database.MigrateAsync();
 
                 await SeedData.InitializeAsync(context);
             }
