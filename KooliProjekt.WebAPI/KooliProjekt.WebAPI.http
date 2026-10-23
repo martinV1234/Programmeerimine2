@@ -1,5 +1,21 @@
 @KooliProjekt.WebAPI_HostAddress = http://localhost:5086
 
+### Broneeringute teine leht (OperationResult<PagedResult<BookingListItemDto>>)
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/list?page=2&pageSize=10
+Accept: application/json
+
+### Sama leht õpetaja näite marsruudiga
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/list/2/10
+Accept: application/json
+
+### Viimane leht: 35 kirje korral 5 tulemust
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/list?page=4&pageSize=10
+Accept: application/json
+
+### Lehekülg pärast viimast: tühi Results, HTTP 200
+GET {{KooliProjekt.WebAPI_HostAddress}}/api/Bookings/list?page=5&pageSize=10
+Accept: application/json
+
 ### Users List: 200
 GET {{KooliProjekt.WebAPI_HostAddress}}/api/Users/list
 Accept: application/json

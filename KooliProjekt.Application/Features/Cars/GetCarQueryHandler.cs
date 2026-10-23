@@ -1,12 +1,15 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
+using KooliProjekt.Application.Dto;
+using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Application.Features.Cars
 {
-    public class GetCarQueryHandler : IRequestHandler<GetCarQuery, Car>
+    public class GetCarQueryHandler : IRequestHandler<GetCarQuery, OperationResult<CarDto>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -15,11 +18,25 @@ namespace KooliProjekt.Application.Features.Cars
             _dbContext = dbContext;
         }
 
-        public async Task<Car> Handle(GetCarQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<CarDto>> Handle(GetCarQuery request, CancellationToken cancellationToken)
         {
-            return await _dbContext.Cars
+            var response = new OperationResult<CarDto>();
+            response.Value = await _dbContext.Cars
                 .AsNoTracking()
-                .FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
+                .Where(item => item.Id == request.Id)
+                .Select(item => new CarDto
+                {
+                    Id = item.Id,
+                    RegistrationNo = item.RegistrationNo,
+                    ManufacturerName = item.CarModel.CarManufacturer.Name,
+                    ModelName = item.CarModel.Name,
+                    CarModelId = item.CarModelId,
+                    KmRate = item.CarModel.KmRate,
+                    HourlyRate = item.CarModel.HourlyRate
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return response;
         }
     }
 }
