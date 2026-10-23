@@ -59,8 +59,13 @@ namespace KooliProjekt.WebAPI
                 var context = scope.ServiceProvider
                     .GetRequiredService<ApplicationDbContext>();
 
-                // Do not auto-migrate this existing database at startup: its Users
-                // table is not recorded in EF's migration history.
+                // Create/update the dedicated development database before seeding.
+                // Other environments apply migrations as a separate deployment step.
+                if (app.Environment.IsDevelopment())
+                {
+                    await context.Database.MigrateAsync();
+                }
+
                 await SeedData.InitializeAsync(context);
             }
 
