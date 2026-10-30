@@ -51,6 +51,26 @@ namespace KooliProjekt.WebAPI.Controllers
         {
             return List(page, pageSize, cancellationToken);
         }
+
+        [HttpPost("save")]
+        [ProducesResponseType(typeof(OperationResult), 200)]
+        [ProducesResponseType(typeof(OperationResult), 400)]
+        public async Task<IActionResult> Save([FromBody] SaveUserCommand command,
+            CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Result(result);
+        }
+
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(OperationResult), 200)]
+        [ProducesResponseType(typeof(OperationResult), 400)]
+        public async Task<IActionResult> Delete([FromBody] DeleteUserCommand command,
+            CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Result(result);
+        }
     }
 }
 
