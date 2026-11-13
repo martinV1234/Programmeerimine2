@@ -1,49 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
-
 namespace KooliProjekt.Application.Behaviors
 {
-    public class ValidationBehavior<TRequest, TResponse> : 
-        IPipelineBehavior<TRequest, TResponse> where TResponse : OperationResult, new()
+    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TResponse : OperationResult, new()
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            _validators = validators;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, 
-                                            RequestHandlerDelegate<TResponse> next,
-                                            CancellationToken cancellationToken)
+        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) { _validators = validators; }
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
         {
             var response = new TResponse();
-            var context = new ValidationContext<TRequest>(request);
-            
-            var validationFailures = await Task.WhenAll(
-                _validators.Select(validator => validator.ValidateAsync(context)));
-
-            var errors = validationFailures
-                .Where(validationResult => !validationResult.IsValid)
-                .SelectMany(validationResult => validationResult.Errors)
-                .ToList();
-
-            if (errors.Any())
+            foreach (var validator in _validators)
             {
-                foreach(var error in errors)
-                {
-                    response.AddPropertyError(error.PropertyName, error.ErrorMessage);
-                }
-
-                return response;
+                var result = await validator.ValidateAsync(new ValidationContext<TRequest>(request), ct);
+                foreach (var error in result.Errors) response.AddPropertyError(error.PropertyName, error.ErrorMessage);
             }
-
-            return await next();
+            return response.HasErrors ? response : await next();
         }
     }
 }

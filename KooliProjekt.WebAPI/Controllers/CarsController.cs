@@ -1,3 +1,6 @@
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using KooliProjekt.Application.Infrastructure.Files;
 using System.Threading;
 using System.Threading.Tasks;
 using KooliProjekt.Application.Dto;
@@ -71,6 +74,33 @@ namespace KooliProjekt.WebAPI.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return Result(result);
         }
+
+        [HttpPost("{carId:int}/files")]
+        [RequestSizeLimit(6 * 1024 * 1024)]
+        public async Task<IActionResult> AddFile(int carId, IFormFile file, CancellationToken ct)
+        {
+            if (file == null || file.Length == 0 || file.Length > FileRules.MaxBytes)
+                return Result(new OperationResult().AddPropertyError("File", "A file of 1 byte to 5 MB is required."));
+            using var memory = new MemoryStream();
+            await file.CopyToAsync(memory, ct);
+            return Result(await _mediator.Send(new AddFileCommand { CarId = carId, FileName = file.FileName, Content = memory.ToArray() }, ct));
+        }
+
+        [HttpGet("{carId:int}/files")]
+        public async Task<IActionResult> ListFiles(int carId, CancellationToken ct) =>
+            Result(await _mediator.Send(new ListFilesQuery { CarId = carId }, ct));
+
+        [HttpGet("{carId:int}/files/{fileName}")]
+        public async Task<IActionResult> GetFile(int carId, string fileName, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetFileCommand { CarId = carId, FileName = fileName }, ct);
+            if (result.HasErrors) return Result((OperationResult)result);
+            if (result.Value == null) return NotFound();
+            return File(result.Value, FileRules.ContentType(fileName), fileName);
+        }
+
+        [HttpDelete("{carId:int}/files/{fileName}")]
+        public async Task<IActionResult> DeleteFile(int carId, string fileName, CancellationToken ct) =>
+            Result(await _mediator.Send(new DeleteFileCommand { CarId = carId, FileName = fileName }, ct));
     }
 }
-
