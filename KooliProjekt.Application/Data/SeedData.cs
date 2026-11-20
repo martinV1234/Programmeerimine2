@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using KooliProjekt.Application.Authentication;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,7 +84,7 @@ namespace KooliProjekt.Application.Data
                     Phone = $"+372555{i:00000}",
                     Email = $"klient{i + 1:00}@example.com",
                     IsAdmin = i == 0,
-                    Password = "DemoPassword123!"
+                    Password = PasswordHelper.Hash("DemoPassword123!")
                 })
                 .ToList();
 

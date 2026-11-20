@@ -1,10 +1,12 @@
-﻿using KooliProjekt.Application.Infrastructure.Results;
+using KooliProjekt.Application.Infrastructure.Results;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace KooliProjekt.WebAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]    
     public abstract class ApiControllerBase : Controller

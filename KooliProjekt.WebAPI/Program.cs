@@ -1,5 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Text;
+using KooliProjekt.Application.Authentication.Jwt;
+using KooliProjekt.Application.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using KooliProjekt.Application.Infrastructure.Files;
 using FluentValidation;
 using KooliProjekt.Application.Behaviors;
@@ -35,6 +40,24 @@ namespace KooliProjekt.WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var jwt = new JwtSettings(builder.Configuration);
+            builder.Services.AddSingleton(jwt);
+            builder.Services.AddSingleton<JwtTokenBuilder>();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IUserProvider, WebUserProvider>();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+                    ValidateIssuer = true, ValidIssuer = jwt.Issuer,
+                    ValidateAudience = true, ValidAudience = jwt.Audience,
+                    ValidateLifetime = true, ClockSkew = TimeSpan.Zero
+                };
+            });
+            builder.Services.AddAuthorization();
+
             var applicationAssembly = typeof(ErrorHandlingBehavior<,>).Assembly;
             builder.Services.AddValidatorsFromAssembly(applicationAssembly);
             builder.Services.AddMediatR(config =>
@@ -54,6 +77,7 @@ namespace KooliProjekt.WebAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

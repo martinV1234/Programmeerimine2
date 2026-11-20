@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 using System.Linq;
+using KooliProjekt.Application.Authentication;
 
 namespace KooliProjekt.Application.Features.Users
 {
@@ -40,7 +41,7 @@ namespace KooliProjekt.Application.Features.Users
             entity.Phone = request.Phone;
             entity.Email = request.Email;
             entity.IsAdmin = request.IsAdmin;
-            entity.Password = request.Password;
+            entity.Password = PasswordHelper.Hash(request.Password);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return result;
         }
