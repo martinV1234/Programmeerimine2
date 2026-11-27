@@ -5,6 +5,7 @@ using KooliProjekt.Application.Authentication.Jwt;
 using KooliProjekt.Application.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using KooliProjekt.Application.Infrastructure.Files;
 using FluentValidation;
 using KooliProjekt.Application.Behaviors;
@@ -38,7 +39,17 @@ namespace KooliProjekt.WebAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Kleebi siia autentimisel saadud token."
+                });
+                options.OperationFilter<SwaggerAuthorizationFilter>();
+            });
 
             var jwt = new JwtSettings(builder.Configuration);
             builder.Services.AddSingleton(jwt);

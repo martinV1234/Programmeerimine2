@@ -27,6 +27,9 @@ namespace KooliProjekt.Application.Data
         [Precision(12, 2)]
         public decimal Total { get; set; }
 
+        public int? InvoiceId { get; set; }
+        public Invoice Invoice { get; set; }
+
         public int BookingId { get; set; }
 
         public Booking Booking { get; set; } = null!;

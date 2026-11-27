@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KooliProjekt.WebAPI.Controllers
 {
-    public class CarsController : ApiControllerBase
+    public class CarsController : AdminApiBaseController
     {
         private readonly IMediator _mediator;
 
@@ -104,3 +104,4 @@ namespace KooliProjekt.WebAPI.Controllers
             Result(await _mediator.Send(new DeleteFileCommand { CarId = carId, FileName = fileName }, ct));
     }
 }
+

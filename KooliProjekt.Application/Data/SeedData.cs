@@ -151,7 +151,8 @@ namespace KooliProjekt.Application.Data
                         Unit = "km",
                         Quantity = 1m,
                         Total = price,
-                        BookingId = bookingEntities[i].Id
+                        BookingId = bookingEntities[i].Id,
+                        InvoiceId = invoiceEntities[i].Id
                     };
                 })
                 .ToList();

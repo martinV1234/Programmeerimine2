@@ -15,6 +15,9 @@ namespace KooliProjekt.Application.Data
         [Required]
         public DateTime Finished { get; set; }
 
+        // Public rents remain active until the customer explicitly finishes them.
+        public bool IsActive { get; set; }
+
         [Required]
         public decimal StartKm { get; set; }
         [Required]

@@ -10,7 +10,7 @@ namespace KooliProjekt.WebAPI.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : AdminApiBaseController
     {
         private static readonly string[] Summaries = new[]
         {
@@ -37,3 +37,4 @@ namespace KooliProjekt.WebAPI.Controllers
         }
     }
 }
+

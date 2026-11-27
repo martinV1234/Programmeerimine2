@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KooliProjekt.WebAPI.Controllers
 {
-    public class InvoiceLinesController : ApiControllerBase
+    public class InvoiceLinesController : AdminApiBaseController
     {
         private readonly IMediator _mediator;
 
@@ -73,4 +73,5 @@ namespace KooliProjekt.WebAPI.Controllers
         }
     }
 }
+
 

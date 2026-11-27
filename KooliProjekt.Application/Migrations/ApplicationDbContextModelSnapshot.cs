@@ -43,6 +43,9 @@ namespace KooliProjekt.Application.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("KmRate")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -297,11 +300,13 @@ namespace KooliProjekt.Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KooliProjekt.Application.Data.Invoice", null)
+                    b.HasOne("KooliProjekt.Application.Data.Invoice", "Invoice")
                         .WithMany("InvoiceLines")
                         .HasForeignKey("InvoiceId");
 
                     b.Navigation("Booking");
+
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("KooliProjekt.Application.Data.Booking", b =>
